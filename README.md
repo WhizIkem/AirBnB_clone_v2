@@ -1,3 +1,5 @@
+# AirBnB clone - MySQL #
+An update on
 # AirBnB clone - The console #
 ## Description of Project ##
 * How to create a Python package
