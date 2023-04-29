@@ -1,19 +1,21 @@
 #!/usr/bin/python3
-"""
-AirBnB clone - The console
-State module
-"""
-from models.base_model import BaseModel
+"""This is the state class"""
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from models.city import City
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
+    """This is the class for State
+    Attributes:
+        name: input name
     """
-    Defines attributes/methods for the State class, subclass of BaseModel
-    Other attributes/methods are inherited from BaseModel
-    """
+    __tablename__ = "states"
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", cascade="all, delete, delete-orphan",
+                          backref="state")
 
-    name = ""
-
-    # def __init__(self, *args, **kwargs):
-    #     """initialize variables and methods"""
-    #     super().__init__(self, *args, **kwargs)
+    @property
+    def cities(self):
+        return(self.cities)
