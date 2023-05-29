@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+i!/usr/bin/env bash
 # Bash script that sets up your web servers for the deployment of web_static
 
 sudo apt-get update
@@ -19,7 +19,7 @@ sudo echo "<html>
   <body>
     Holberton School
   </body>
-</html>" > /data/web_static/releases/test/index.html
+</html>" | sudo tee /data/web_static/releases/test/index.html
 
 sudo ln -s -f /data/web_static/relaeases/test /data/web_static/current
 
