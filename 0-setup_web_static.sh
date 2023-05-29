@@ -34,7 +34,7 @@ sudo ln -s "$target_path" "$link_path"
 
 sudo chown -R ubuntu:ubuntu /data/
 
-sudo sed -i '/server_name .*;/a location /hbnb_static/ {\nalias /data/web_static/current/;\nindex index.html;\n}' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server/a location /hbnb_static/ {\nalias /data/web_static/current/;\nindex index.html;\n}' /etc/nginx/sites-available/default
 
 sudo service nginx restart
 
