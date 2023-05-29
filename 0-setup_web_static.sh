@@ -1,4 +1,4 @@
-i!/usr/bin/env bash
+#!/usr/bin/env bash
 # Bash script that sets up your web servers for the deployment of web_static
 
 sudo apt-get update
@@ -21,7 +21,7 @@ sudo echo "<html>
   </body>
 </html>" | sudo tee /data/web_static/releases/test/index.html
 
-sudo ln -s -f /data/web_static/relaeases/test /data/web_static/current
+sudo ln -s -f /data/web_static/relaeases/test/ /data/web_static/current
 
 sudo chown -R ubuntu:ubuntu /data/
 
