@@ -8,7 +8,6 @@ sudo apt-get install ufw
 sudo ufw allow 'Nginx HTTP'
 
 sudo mkdir -p /data/
-i
 sudo mkdir -p /data/web_static/
 sudo mkdir -p /data/web-static/releases/
 sudo mkdir -p /data/web_static/shared/
