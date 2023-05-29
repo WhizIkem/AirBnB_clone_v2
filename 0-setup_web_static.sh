@@ -8,6 +8,7 @@ sudo apt-get install ufw
 sudo ufw allow 'Nginx HTTP'
 
 sudo mkdir -p /data/
+i
 sudo mkdir -p /data/web_static/
 sudo mkdir -p /data/web-static/releases/
 sudo mkdir -p /data/web_static/shared/
@@ -19,12 +20,14 @@ sudo echo "<html>
   <body>
     Holberton School
   </body>
-</html>" | sudo tee /data/web_static/releases/test/index.html
+</html>" > /data/web_static/releases/test/index.html
 
-sudo ln -s -f /data/web_static/relaeases/test/ /data/web_static/current
+sudo ln -sf /data/web_static/relaeases/test/ /data/web_static/current
 
 sudo chown -R ubuntu:ubuntu /data/
 
 sudo sed -i '/listen 80 default_server/a location /hbnb_static { alias /data/web_static/current/;}' /etc/nginx/sites-enabled/default
 
 sudo service nginx restart
+
+exit 0
