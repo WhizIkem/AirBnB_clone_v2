@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
 # Bash script that sets up your web servers for the deployment of web_static
 
-sudo apt-get update
-sudo apt-get install nginx
+# Install Nginx if not already installed
+if ! command -v nginx &> /dev/null; then
+	sudo apt-get -y update
+	sudo apt-get -y install nginx
+fi
 
-sudo mkdir -p /data/
-sudo mkdir -p /data/web_static/
-sudo mkdir -p /data/web-static/releases/
-sudo mkdir -p /data/web_static/shared/
-sudo mkdir -p /data/web_static/releases/test/
+# Create the necessary folders
+web_static_dir="/data/web_static"
+releases_dir="${web_static_dir}/releases"
+shared_dir="${web_static_dir}/shared"
+test_dir="${releases_dir}/test"
+index_file="${test_dir}/index.html"
 
-file_path="/data/web_static/releases/test/index.html"
-# Create the directory if it doesn't exist
-sudo mkdir -p "$(dirname "$file_path")"
+mkdir -p "${web_static_dir}"
+mkdir -p "${releases_dir}"
+mkdir -p "${shared_dir}"
+mkdir -p "${test_dir}"
+
 # Create the fake HTML file
 sudo echo "<html>
 <head>
@@ -20,22 +26,30 @@ sudo echo "<html>
 <body>
 <h1>Holberton School</h1>
 </body>
-</html>" > "file_path"
+</html>" > "${index_file}"
 
-link_path="/data/web_static/current"
-target_path="/data/web_static/releases/test/"
+# Create symbolic link
+current_dir="${web_static_dir}/current"
+
 # Check if the symbolic link exists
-if [ -L "$link_path" ]; then
+if [ -L "${current_dir}" ]; then
     # Delete the existsing symbolic link
-    rm "$link_path"
+    rm "${current_dir}"
 fi
 # Create the symbolic link
-sudo ln -s "$target_path" "$link_path"
+sudo ln -s "${test_dir}" "${current_dir}"
 
+# Set ownership
 sudo chown -R ubuntu:ubuntu /data/
 
-sudo sed -i '/listen 80 default_server/a location /hbnb_static/ {\nalias /data/web_static/current/;\nindex index.html;\n}' /etc/nginx/sites-available/default
+# Update Nginx configuration
+config_file="/etc/nginx/sites-available/default"
+nginx_alias="location /hbnb_static/ { alias ${current_dir}/; }"
+if ! grep -q "${nginx_alias}" "${config_file}"; then
+	sudo sed -i "/server_name _;/a ${nginx_alias}" "${config_file}"
+fi
 
+# Restart Nginx
 sudo service nginx restart
 
 exit 0
