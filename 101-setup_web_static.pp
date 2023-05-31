@@ -76,6 +76,7 @@ class web_servers {
     enable    => true,
     hasstatus => true,
     require   => Package['nginx'],
+    subscribe => File['/etc/nginx/sites-available/default'],
   }
 }
 
