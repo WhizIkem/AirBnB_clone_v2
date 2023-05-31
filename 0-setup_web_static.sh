@@ -37,7 +37,7 @@ if [ -L "${current_dir}" ]; then
     rm "${current_dir}"
 fi
 # Create the symbolic link
-sudo ln -s "${test_dir}" "${current_dir}"
+sudo ln -sf "${test_dir}" "${current_dir}"
 
 # Set ownership
 sudo chown -R ubuntu:ubuntu /data/
@@ -46,7 +46,7 @@ sudo chown -R ubuntu:ubuntu /data/
 config_file="/etc/nginx/sites-available/default"
 nginx_alias="location /hbnb_static/ { alias ${current_dir}/; }"
 if ! grep -q "${nginx_alias}" "${config_file}"; then
-        sudo sed -i "/server_name _;/a ${nginx_alias}" "${config_file}"
+        sudo sed -i "/listen 80 default_server/a ${nginx_alias}" "${config_file}"
 fi
 
 # Restart Nginx
