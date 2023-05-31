@@ -1,55 +1,28 @@
 #!/usr/bin/env bash
-# Bash script that sets up your web servers for the deployment of web_static
+
+# Bash script that sets up your web server for the deployment of web_statics
 
 # Install Nginx if not already installed
 if ! command -v nginx &> /dev/null; then
-	sudo apt-get -y update
-	sudo apt-get -y install nginx
+    sudo apt-get update
+    sudo apt-get install -y nginx
 fi
 
-# Create the necessary folders
-web_static_dir="/data/web_static"
-releases_dir="${web_static_dir}/releases"
-shared_dir="${web_static_dir}/shared"
-test_dir="${releases_dir}/test"
-index_file="${test_dir}/index.html"
+# Create necessary directories if they don't exist
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
 
-mkdir -p "${web_static_dir}"
-mkdir -p "${releases_dir}"
-mkdir -p "${shared_dir}"
-mkdir -p "${test_dir}"
+# Create a fake HTML file for testing
+sudo echo -e "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\tHolberton School\n\t</body>\n</html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
-# Create the fake HTML file
-sudo echo "<html>
-<head>
-</head>
-<body>
-<h1>Holberton School</h1>
-</body>
-</html>" > "${index_file}"
-
-# Create symbolic link
-current_dir="${web_static_dir}/current"
-
-# Check if the symbolic link exists
-if [ -L "${current_dir}" ]; then
-    # Delete the existsing symbolic link
-    rm "${current_dir}"
-fi
-# Create the symbolic link
-sudo ln -s "${test_dir}" "${current_dir}"
-
-# Set ownership
+# Create symbolic link and set ownership
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data/
 
 # Update Nginx configuration
 config_file="/etc/nginx/sites-available/default"
-nginx_alias="location /hbnb_static/ { alias ${current_dir}/; }"
-if ! grep -q "${nginx_alias}" "${config_file}"; then
-	sudo sed -i "/server_name _;/a ${nginx_alias}" "${config_file}"
-fi
+sudo sed -i '/^\s*location \/ {/a \\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}' $config_file
 
 # Restart Nginx
 sudo service nginx restart
 
-exit 0
