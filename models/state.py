@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from os import getenv
+from models import storage
 
 
 class State(BaseModel, Base):
@@ -23,6 +24,12 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """getter - returns the list of City instances"""
-            return [obj for (key, obj) in
+            """return [obj for (key, obj) in
                     models.storage.all(models.City).items()
-                    if obj.state_id == self.id]
+                    if obj.state_id == self.id]"""
+            """ Returns the list of City objects from storage linked to the current State"""
+            city_list = []
+            for city in storage.all("City").values():
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
