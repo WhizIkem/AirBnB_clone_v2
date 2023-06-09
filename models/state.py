@@ -23,13 +23,13 @@ class State(BaseModel, Base):
         """initializes state"""
         super().__init__(*args, **kwargs)
 
-    if getenv('HBNB_TYPE_STORAGE') != 'db':
+    """if getenv('HBNB_TYPE_STORAGE') != 'db':"""
+    if models.storage_type == 'file':
         @property
         def cities(self):
-            """fs getter attribute that returns City instances"""
-            values_city = models.storage.all("City").values()
+            """Returns the last of City objects linked to the current State"""
             list_city = []
-            for city in values_city:
+            for city in models.storage.all(models.City).values():
                 if city.state_id == self.id:
                     list_city.append(city)
             return list_city
