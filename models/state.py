@@ -23,8 +23,7 @@ class State(BaseModel, Base):
         """initializes state"""
         super().__init__(*args, **kwargs)
 
-    """if getenv('HBNB_TYPE_STORAGE') != 'db':"""
-    if models.storage_type == 'file':
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def cities(self):
             """Returns the last of City objects linked to the current State"""
