@@ -82,12 +82,8 @@ class DBStorage:
             self.__session.delete(obj)
         self.save()
 
-#    Note: leave this here, might use later?
-#    Not sure why we are NOT being asked to close the sessions
-#    In Project 0x0F, I always closed sessions prior to terminating
-#    That is a question we should ask
-#
+
     def close(self):
-        """close the current database session
+        """Calls remove() method on the private session attribute (self.__session)
         """
         self.__session.close()
